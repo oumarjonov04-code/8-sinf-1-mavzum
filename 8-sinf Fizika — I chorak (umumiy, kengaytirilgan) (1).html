@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>8-sinf Fizika — I chorak</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#141829; --bg-2:#1c2138; --panel:#1f253f; --panel-2:#262d4c;
+  --ink:#EDE8DC; --dim:#B9B6C8; --line:#363c5c;
+  --amber:#F2A93B; --teal:#59D6C4; --teal-deep:#2F9E8F; --violet:#A78BFA; --danger:#E8735F;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box}
+body{margin:0;min-height:100%;background:var(--bg);
+  background-image:radial-gradient(circle at 10% 0%,rgba(242,169,59,.08),transparent 40%),radial-gradient(circle at 90% 10%,rgba(167,139,250,.1),transparent 45%);
+  color:var(--ink);font-family:'Manrope',sans-serif;line-height:1.6}
+h1,h2{font-family:'Fraunces',serif;font-weight:600;margin:0 0 .4em;color:#FBF7EE}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px 80px}
+.hero{padding:48px 20px 36px;border-bottom:1px solid var(--line)}
+.hero .kicker{color:var(--amber);font-family:'Fraunces',serif;font-style:italic;margin-bottom:8px}
+.hero h1{font-size:clamp(1.8rem,6vw,2.6rem)}
+.hero p{color:var(--dim);max-width:46ch}
+section{padding:36px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+.num{font-family:'Fraunces',serif;font-style:italic;color:var(--dim);font-size:.9rem;margin-bottom:4px}
+section h2{font-size:clamp(1.2rem,4vw,1.5rem)}
+.lead{color:var(--dim);max-width:62ch;font-size:.95rem}
+.term{background:rgba(242,169,59,.14);border-bottom:2px solid var(--amber);color:#FBF7EE;padding:0 3px;border-radius:3px;font-weight:600}
+.term.c{background:rgba(89,214,196,.14);border-bottom:2px solid var(--teal)}
+.term.v{background:rgba(167,139,250,.16);border-bottom:2px solid var(--violet)}
+.sim{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.sim-head{display:flex;justify-content:space-between;align-items:center;padding:11px 15px;border-bottom:1px solid var(--line);background:var(--panel-2);font-size:.8rem;color:var(--dim)}
+.sim-head strong{color:var(--ink);font-size:.86rem}
+.sim-body{padding:15px}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{font-family:'Manrope',sans-serif;font-weight:600;font-size:.8rem;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--amber);color:var(--ink)}
+.chip.active{background:var(--amber);border-color:var(--amber);color:#1a1204}
+.detail{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:.88rem;color:var(--dim);min-height:50px}
+.detail b{color:#FBF7EE}
+canvas{display:block;width:100%;height:auto;background:var(--bg-2);border-radius:10px;touch-action:none}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.calc-field label{display:block;font-size:.78rem;color:var(--dim);margin-bottom:5px}
+.calc-field input[type=range]{width:100%;accent-color:var(--amber)}
+.calc-field .val{font-weight:700;color:var(--amber)}
+.calc-result{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:.95rem;text-align:center;margin-bottom:10px}
+.calc-result .f{font-family:'Fraunces',serif;font-size:1.1rem;color:var(--teal)}
+.scn{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.scn p{margin:0 0 8px;font-size:.88rem;color:var(--ink)}
+.scn .btns{display:flex;gap:8px}
+.scn button{font-family:'Manrope',sans-serif;font-weight:700;font-size:.8rem;padding:6px 12px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer}
+.scn .fb{display:none;margin-top:6px;font-size:.82rem;padding:7px 9px;border-radius:8px}
+.scn .fb.ok{background:rgba(89,214,196,.15);color:var(--teal);display:block}
+.scn .fb.bad{background:rgba(232,115,95,.15);color:var(--danger);display:block}
+.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-bottom:9px}
+.quiz-card p.q{font-weight:700;color:#FBF7EE;margin:0 0 7px;font-size:.88rem}
+.opt{display:block;width:100%;text-align:left;background:var(--bg-2);border:1px solid var(--line);color:var(--ink);padding:7px 11px;border-radius:7px;margin-bottom:5px;cursor:pointer;font-size:.84rem}
+.opt:hover{border-color:var(--amber)}
+.opt.correct{background:rgba(89,214,196,.18);border-color:var(--teal)}
+.opt.wrong{background:rgba(232,115,95,.16);border-color:var(--danger)}
+.keypoints{margin:12px 0 0;padding-left:18px;color:var(--dim);font-size:.89rem}
+.keypoints li{margin-bottom:6px}
+.note{margin-top:12px;background:var(--panel);border-left:3px solid var(--violet);border-radius:0 10px 10px 0;padding:10px 14px}
+.note .tag{font-size:.7rem;font-weight:800;letter-spacing:.03em;color:var(--violet);margin-bottom:3px}
+.note p{margin:0;font-size:.87rem;color:var(--dim)}
+.example{margin-top:10px;background:rgba(89,214,196,.07);border:1px solid rgba(89,214,196,.3);border-radius:10px;padding:10px 14px}
+.example .tag{font-size:.7rem;font-weight:800;letter-spacing:.03em;color:var(--teal);margin-bottom:3px}
+.example p{margin:0;font-size:.87rem;color:var(--dim)}
+footer{text-align:center;color:var(--dim);font-size:.8rem;padding:34px 20px 10px}
+</style>
+</head>
+<body>
+<div class="hero"><div class="wrap" style="padding:0">
+  <div class="kicker">8-sinf · Fizika · I chorak</div>
+  <h1>Elektr zaryadlardan tokkacha</h1>
+  <p>Zaryadlanishdan boshlab, Kulon qonuni, elektr toki va birinchi elektr o'lchovlarigacha — 13 ta mavzu, har biri interaktiv mashq bilan.</p>
+</div></div>
+<div class="wrap">
+
+<section><div class="num">1-mavzu</div><h2>Jismlarning zaryadlanishi</h2>
+<p class="lead">Ikki jismni ishqalanganda ular <span class="term">elektrlanadi</span> — bir-biriga elektron beradi yoki oladi. Elektronlarni yo'qotgan jism musbat, elektron olgan jism esa manfiy zaryadlanadi. Bu hodisa elektrostatika fanining asosini tashkil qiladi.</p>
+<ul class="keypoints">
+  <li>Zaryadlanish faqat elektronlar almashinuvi orqali sodir bo'ladi — protonlar joyidan qo'zg'almaydi</li>
+  <li>Ishqalanish orqali zaryadlanishga "elektrlanish" yoki "triboelektr effekt" deyiladi</li>
+  <li>Qishda kiyimlarni yechayotganda eshitiladigan "shitirlash" tovushi ham shu hodisaning namoyon bo'lishi</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Ishqalash orqali zaryadlanish</strong><span>Bosib ko'ring</span></div><div class="sim-body">
+<div class="chip-row" id="g1"></div><div class="detail" id="g1d"></div>
+</div></div></section>
+
+<section><div class="num">2-mavzu</div><h2>Elektr zaryad</h2>
+<p class="lead">Zaryadlar ikki xil bo'ladi: <span class="term">musbat (+)</span> va <span class="term c">manfiy (−)</span>. Bir xil zaryadlar itarishadi, har xil zaryadlar tortishadi. Zaryad miqdori kulonlarda (Kl) o'lchanadi, eng kichik zaryad esa elektron zaryadiga teng (elementar zaryad).</p>
+<ul class="keypoints">
+  <li>Zaryad saqlanish qonuniga bo'ysunadi — yopiq sistemada umumiy zaryad miqdori o'zgarmas qoladi</li>
+  <li>Proton musbat, elektron manfiy, neytron esa zaryadsiz zarracha</li>
+  <li>Bitta elektronning zaryadi juda kichik (≈1,6×10⁻¹⁹ Kl), shuning uchun kundalik hayotda odatda juda ko'p elektron bilan ishlaymiz</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Zaryadlar o'zaro ta'siri</strong><span>Tanlang</span></div><div class="sim-body">
+<div class="chip-row"><button class="chip active" data-c="same">Bir xil zaryadlar</button><button class="chip" data-c="diff">Har xil zaryadlar</button></div>
+<canvas id="chargeCanvas" width="640" height="160"></canvas>
+</div></div></section>
+
+<section><div class="num">3-mavzu</div><h2>Zaryadlarning o'zaro ta'siri. Kulon qonuni</h2>
+<p class="lead"><span class="term">Kulon qonuni</span>: F = k·q₁·q₂ / r². Zaryadlar va masofani o'zgartirib, kuchni kuzating. Bu qonunni 1785-yilda frantsuz fizigi Sharl Kulon kashf etgan va u ikki nuqtaviy zaryad orasidagi o'zaro ta'sir kuchini aniq hisoblash imkonini beradi.</p>
+<ul class="keypoints">
+  <li>k — proportsionallik koeffitsienti (elektrostatik doimiy)</li>
+  <li>Kuch zaryadlar ko'paytmasiga to'g'ri, masofa kvadratiga teskari proporsional</li>
+  <li>Bu — tabiatdagi ko'plab "teskari kvadrat qonunlari"dan biri (Nyutonning tortishish qonuniga o'xshash)</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Kulon kalkulyatori</strong><span>F = k·q₁q₂/r²</span></div><div class="sim-body">
+<div class="calc-grid">
+  <div class="calc-field"><label>Zaryad, q = <span class="val" id="qVal">5</span> (shartli birlik)</label><input type="range" id="qSlider" min="1" max="10" value="5"></div>
+  <div class="calc-field"><label>Masofa, r = <span class="val" id="rVal">4</span> (shartli birlik)</label><input type="range" id="rSlider" min="1" max="10" value="4"></div>
+</div>
+<div class="calc-result"><span class="f">F = q² / r² = <span id="fResult">1.56</span> (shartli)</span></div>
+<div class="detail">Masofa 2 marta kamaysa, kuch 4 marta ortadi — bu <b>teskari kvadrat qonuni</b>.</div>
+</div></div></section>
+
+<section><div class="num">4-mavzu</div><h2>Elektr maydon</h2>
+<p class="lead">Har bir zaryad atrofida <span class="term c">elektr maydon</span> hosil qiladi — bu maydon boshqa zaryadlarga kuch ta'sir ettiradi. Maydonni ko'rinmas "kuch chiziqlari" yordamida tasvirlash mumkin: musbat zaryaddan chiqadi, manfiy zaryadga kiradi.</p>
+<ul class="keypoints">
+  <li>Maydon chizig'i qanchalik zich bo'lsa, maydon shuncha kuchli</li>
+  <li>Elektr maydon zaryadga tegmasdan ham ta'sir ko'rsatishi mumkin — bu "masofadan ta'sir" hodisasi</li>
+  <li>Maydon kuchlanganligi E = F/q formulasi bilan aniqlanadi</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Maydon chiziqlari</strong><span>Zaryad turini tanlang</span></div><div class="sim-body">
+<div class="chip-row"><button class="chip active" data-fc="pos">Musbat zaryad</button><button class="chip" data-fc="neg">Manfiy zaryad</button></div>
+<canvas id="fieldCanvas" width="640" height="220"></canvas>
+</div></div></section>
+
+<section><div class="num">5-mavzu</div><h2>O'tkazgichlarda elektr zaryadlarining taqsimlanishi</h2>
+<p class="lead">Metall jismga berilgan zaryad uning <span class="term">sirtida</span> taqsimlanadi, ichkarida esa maydon nolga teng bo'ladi. Bu metallardagi erkin elektronlarning bir-birini itarib, mumkin qadar uzoqroqqa — ya'ni sirtga — joylashishga intilishi bilan bog'liq.</p>
+<ul class="keypoints">
+  <li>Bu hodisa "elektrostatik himoya" (Faradey qafasi) printsipining asosi — metall qobiq ichkarisini tashqi elektr maydonlardan himoya qiladi</li>
+  <li>Jismning qirralari va uchlari yaqinida zaryad zichligi va maydon kuchliroq bo'ladi</li>
+  <li>Shu sababli chaqmoq ko'pincha baland va o'tkir uchli obyektlarga (minora, daraxt) uradi</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Zaryad taqsimlanishi</strong><span>Metall shar</span></div><div class="sim-body">
+<canvas id="distCanvas" width="640" height="200"></canvas>
+<div class="detail">Zaryadlar bir-birini itarib, iloji boricha uzoqroq joylashishga intiladi — shuning uchun ular sirtga "yoyiladi".</div>
+</div></div></section>
+
+<section><div class="num">6-mavzu</div><h2>Tabiatdagi elektr hodisalari. "Tabiatdagi xavf"</h2>
+<p class="lead"><span class="term">Chaqmoq</span> — bulutlar va Yer orasidagi ulkan elektr razryadi. Momaqaldiroq bulutlarida ishqalanish natijasida katta zaryad to'planadi va u bulut bilan yer orasida yoki ikki bulut orasida bir zumda razryad bo'ladi. Xavfsizlik qoidalarini bilish hayot uchun muhim.</p>
+<ul class="keypoints">
+  <li>Momaqaldiroq paytida ochiq maydonda, baland daraxt yoki suv havzasi yaqinida turmaslik kerak</li>
+  <li>Chaqmoqqarma (gromootvod) binolarni chaqmoq zarbasidan himoya qiladi — u zaryadni yerga xavfsiz yo'naltiradi</li>
+  <li>Ovoz (momaqaldiroq) yorug'likdan (chaqmoq) kech eshitiladi, chunki tovush tezligi yorug'lik tezligidan ancha kichik</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Xavfsizmi?</strong><span>Tanlang</span></div><div class="sim-body" id="scnWrap"></div></div></section>
+
+<section><div class="num">7-mavzu</div><h2>Elektr toki haqida tushuncha</h2>
+<p class="lead"><span class="term">Elektr toki</span> — zaryadlangan zarrachalarning (elektronlarning) tartibli, yo'nalgan harakati. Tartibsiz harakatdan farqli o'laroq, tok paytida elektronlar barchasi deyarli bir xil yo'nalishda siljiydi.</p>
+<ul class="keypoints">
+  <li>Tok yo'nalishi shartli ravishda musbat zaryadlar harakati yo'nalishi deb olinadi (manbaning "+" uchidan "−" uchiga)</li>
+  <li>Tok mavjud bo'lishi uchun yopiq zanjir va tok manbai kerak</li>
+  <li>Tokning asosiy ta'siri: issiqlik, kimyoviy va magnit ta'sirlari orqali kuzatiladi</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Elektronlar oqimi</strong><span>Simdagi harakat</span></div><div class="sim-body">
+<canvas id="currentCanvas" width="640" height="120"></canvas>
+</div></div></section>
+
+<section><div class="num">8-mavzu</div><h2>Tok manbalari</h2>
+<p class="lead">Tok hosil qilish uchun <span class="term c">tok manbai</span> kerak — u boshqa turdagi energiyani elektr energiyasiga aylantirib, zanjirda uzoq vaqt kuchlanish farqini ushlab turadi.</p>
+<ul class="keypoints">
+  <li>Har bir tok manbai o'z ichida energiya manbaiga ega: kimyoviy (batareya), mexanik (generator) yoki yorug'lik (quyosh batareyasi)</li>
+  <li>Tok manbaisiz zanjirda elektronlar tez orada "tekislanib", harakat to'xtaydi</li>
+  <li>Manbaning ichki qarshiligi ham mavjud — bu uning samaradorligiga ta'sir qiladi</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Tok manbalari turlari</strong><span>Bosib ko'ring</span></div><div class="sim-body">
+<div class="chip-row" id="g8"></div><div class="detail" id="g8d"></div>
+</div></div></section>
+
+<section><div class="num">9-mavzu</div><h2>Elektr kuchlanish va uni o'lchash</h2>
+<p class="lead"><span class="term">Kuchlanish (U)</span> — zanjirning ikki nuqtasi orasidagi elektr maydon ishini ko'rsatadi, voltmetr bilan voltda (V) o'lchanadi. Voltmetr o'lchanayotgan qismga doim <b>parallel</b> ulanadi.</p>
+<ul class="keypoints">
+  <li>Kuchlanish — zaryadni bir nuqtadan ikkinchisiga ko'chirishda bajarilgan ishning shu zaryadga nisbati</li>
+  <li>Oddiy batareya ~1,5V, avtomobil akkumulyatori ~12V, uy tarmog'i ~220V kuchlanish beradi</li>
+  <li>Voltmetrning ichki qarshiligi juda katta bo'lishi kerak — aks holda u zanjirning o'ziga ta'sir qilib, noto'g'ri natija beradi</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Virtual voltmetr</strong><span>Slayderni harakatlantiring</span></div><div class="sim-body">
+<canvas id="voltCanvas" width="640" height="220"></canvas>
+<input type="range" id="voltSlider" min="0" max="20" value="9" style="width:100%;accent-color:var(--amber)">
+</div></div></section>
+
+<section><div class="num">10-mavzu</div><h2>Tok kuchi va uni o'lchash</h2>
+<p class="lead"><span class="term">Tok kuchi (I)</span> — birlik vaqtda o'tkazgich ko'ndalang kesimidan o'tgan zaryad miqdorini ko'rsatadi, ampermetr bilan amperda (A) o'lchanadi. Ampermetr zanjirga doim <b>ketma-ket</b> ulanadi.</p>
+<ul class="keypoints">
+  <li>Tok kuchi I = q/t formulasi bilan aniqlanadi, bu yerda q — o'tgan zaryad, t — vaqt</li>
+  <li>Ampermetrning ichki qarshiligi juda kichik bo'lishi kerak — aks holda u zanjirdagi tokni o'zgartirib yuboradi</li>
+  <li>1 A — har sekundda 1 kulon zaryad o'tishiga teng tok kuchi</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Virtual ampermetr</strong><span>Slayderni harakatlantiring</span></div><div class="sim-body">
+<canvas id="ampCanvas" width="640" height="220"></canvas>
+<input type="range" id="ampSlider" min="0" max="10" value="3" step="0.5" style="width:100%;accent-color:var(--teal)">
+</div></div></section>
+
+<section><div class="num">11-mavzu</div><h2>Laboratoriya ishi-1: Elektr zanjirini yig'ish</h2>
+<p class="lead">Zanjirning turli qismlarida tok kuchi va kuchlanishni o'lchashni mashq qilaylik: <span class="term">U = I · R</span> — bu Om qonuni bo'lib, kuchlanish, tok kuchi va qarshilik orasidagi munosabatni ko'rsatadi.</p>
+<ul class="keypoints">
+  <li>Amaliy ishda batareya, lampochka, ampermetr, voltmetr va ulovchi simlardan zanjir yig'iladi</li>
+  <li>O'lchangan U va I qiymatlaridan qarshilik R = U/I formulasi bilan topiladi</li>
+  <li>Bu — Georg Om 1826-yilda kashf etgan, elektrotexnikaning eng muhim qonunlaridan biri</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Om qonuni kalkulyatori</strong><span>U = I · R</span></div><div class="sim-body">
+<div class="calc-grid">
+  <div class="calc-field"><label>Tok kuchi, I = <span class="val" id="iVal">2</span> A</label><input type="range" id="iSlider" min="1" max="10" value="2"></div>
+  <div class="calc-field"><label>Qarshilik, R = <span class="val" id="rVal2">5</span> Ω</label><input type="range" id="rSlider2" min="1" max="20" value="5"></div>
+</div>
+<div class="calc-result"><span class="f">U = I · R = <span id="uResult">10</span> V</span></div>
+</div></div></section>
+
+<section><div class="num">12-mavzu</div><h2>Elektr qarshilik</h2>
+<p class="lead"><span class="term">Qarshilik (R)</span> — o'tkazgichning tokka ko'rsatadigan "to'sig'i". U o'tkazgich uzunligiga to'g'ri mutanosib, ko'ndalang kesim yuzasiga teskari mutanosib: R = ρL/S, bu yerda ρ — materialning solishtirma qarshiligi.</p>
+<ul class="keypoints">
+  <li>Har bir material o'ziga xos solishtirma qarshilikka ega — metall uchun kichik, izolyator uchun katta</li>
+  <li>Qarshilik birligi — om (Ω), nemis fizigi Georg Om sharafiga nomlangan</li>
+  <li>Harorat ortishi bilan ko'pchilik metallarning qarshiligi ham ortadi</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Qarshilik kalkulyatori</strong><span>R = ρL/S</span></div><div class="sim-body">
+<div class="calc-grid">
+  <div class="calc-field"><label>Uzunlik, L = <span class="val" id="lVal">2</span> m</label><input type="range" id="lSlider" min="1" max="10" value="2"></div>
+  <div class="calc-field"><label>Kesim, S = <span class="val" id="sVal2">1</span> mm²</label><input type="range" id="sSlider2" min="1" max="10" value="1"></div>
+</div>
+<div class="calc-result"><span class="f">R ~ L / S = <span id="rResult2">2.0</span> (shartli)</span></div>
+<div class="detail">Sim qancha uzun bo'lsa, qarshilik shuncha katta; qancha qalin bo'lsa, qarshilik shuncha kichik.</div>
+</div></div></section>
+
+<section><div class="num">13-mavzu</div><h2>Rezistorlar. Reostatlar. Potensiometrlar</h2>
+<p class="lead"><span class="term">Reostat</span> — qarshilikni qo'lda o'zgartirib, zanjirdagi tok kuchini rostlash uchun ishlatiladigan qurilma. <b>Potensiometr</b> esa kuchlanishni rostlash uchun ishlatiladi — masalan, radio ovoz balandligini sozlashda.</p>
+<ul class="keypoints">
+  <li>Reostat sirg'anuvchi kontakt yordamida zanjirga ulangan sim uzunligini (demak, qarshilikni) o'zgartiradi</li>
+  <li>Rezistor — qarshiligi doimiy, reostat — qarshiligi o'zgaruvchan element</li>
+  <li>Reostatlar lampalarning yorqinligini, motorlarning aylanish tezligini rostlashda keng qo'llaniladi</li>
+</ul>
+<div class="sim"><div class="sim-head"><strong>Reostat bilan yorug'lik rostlash</strong><span>Slayderni harakatlantiring</span></div><div class="sim-body">
+<canvas id="rheoCanvas" width="640" height="160"></canvas>
+<input type="range" id="rheoSlider" min="5" max="100" value="30" style="width:100%;accent-color:var(--amber)">
+</div></div></section>
+
+<section><div class="num">Umumiy tekshiruv</div><h2>5 ta savol</h2>
+<div class="quiz-card"><p class="q">1. Bir xil zaryadlar bir-biriga qanday ta'sir qiladi?</p>
+<button class="opt" data-c="true">Itariladi</button><button class="opt" data-c="false">Tortiladi</button><button class="opt" data-c="false">Ta'sir qilmaydi</button></div>
+<div class="quiz-card"><p class="q">2. Kulon qonuniga ko'ra, masofa 2 marta ortsa, kuch qanday o'zgaradi?</p>
+<button class="opt" data-c="false">2 marta kamayadi</button><button class="opt" data-c="true">4 marta kamayadi</button><button class="opt" data-c="false">O'zgarmaydi</button></div>
+<div class="quiz-card"><p class="q">3. Elektr toki nima?</p>
+<button class="opt" data-c="true">Zaryadlangan zarrachalarning tartibli harakati</button><button class="opt" data-c="false">Zaryadning tinch turishi</button><button class="opt" data-c="false">Issiqlik miqdori</button></div>
+<div class="quiz-card"><p class="q">4. Kuchlanish birligi nima?</p>
+<button class="opt" data-c="false">Amper</button><button class="opt" data-c="true">Volt</button><button class="opt" data-c="false">Om</button></div>
+<div class="quiz-card"><p class="q">5. Om qonuni formulasi qaysi?</p>
+<button class="opt" data-c="true">U = I · R</button><button class="opt" data-c="false">U = I / R</button><button class="opt" data-c="false">U = R / I</button></div>
+</section>
+
+</div>
+<footer>8-sinf fizika · I chorak — Taqvim-mavzu reja asosida</footer>
+
+<script>
+function chipGroup(id, data){
+  const row = document.getElementById(id), det = document.getElementById(id+'d');
+  data.forEach((d,i)=>{
+    const b = document.createElement('button'); b.className='chip'+(i===0?' active':''); b.textContent=d.t;
+    b.onclick=()=>{ row.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); b.classList.add('active'); det.innerHTML=d.h; };
+    row.appendChild(b);
+  });
+  det.innerHTML = data[0].h;
+}
+chipGroup('g1',[
+  {t:"Shisha–ipak",h:"Shishani ipakka ishqalaganda shisha <b>musbat</b>, ipak <b>manfiy</b> zaryadlanadi."},
+  {t:"Ebonit–jun",h:"Ebonit tayoqchani junga ishqalaganda ebonit <b>manfiy</b>, jun <b>musbat</b> zaryadlanadi."},
+]);
+chipGroup('g8',[
+  {t:"Batareya",h:"<b>Batareya</b> — kimyoviy energiyani elektr energiyasiga aylantiradi. Misol: pult, soat batareyasi."},
+  {t:"Generator",h:"<b>Generator</b> — mexanik energiyani elektr energiyasiga aylantiradi. Misol: elektr stansiyalari."},
+  {t:"Quyosh batareyasi",h:"<b>Quyosh batareyasi</b> — yorug'lik energiyasini elektr energiyasiga aylantiradi."},
+]);
+
+// 2. Charge interaction
+const chargeCanvas=document.getElementById('chargeCanvas'), cctx=chargeCanvas.getContext('2d');
+let chargeMode='same', ct=0;
+document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{ document.querySelectorAll('[data-c]').forEach(x=>x.classList.remove('active')); b.classList.add('active'); chargeMode=b.dataset.c; ct=0; });
+function drawCharge(){
+  const w=640,h=160; cctx.clearRect(0,0,w,h);
+  ct+=0.02;
+  const push = chargeMode==='same' ? Math.sin(ct)*20 : -Math.abs(Math.sin(ct))*30;
+  const x1=w/2-80-push, x2=w/2+80+push;
+  cctx.fillStyle='#F2A93B'; cctx.beginPath(); cctx.arc(x1,h/2,22,0,Math.PI*2); cctx.fill();
+  cctx.fillStyle='#0c0c12'; cctx.font='bold 18px Manrope'; cctx.textAlign='center'; cctx.fillText('+',x1,h/2+6);
+  cctx.fillStyle = chargeMode==='same' ? '#F2A93B' : '#59D6C4';
+  cctx.beginPath(); cctx.arc(x2,h/2,22,0,Math.PI*2); cctx.fill();
+  cctx.fillStyle='#0c0c12'; cctx.fillText(chargeMode==='same'?'+':'−', x2,h/2+6);
+  cctx.fillStyle='#B9B6C8'; cctx.font='12px Manrope'; cctx.fillText(chargeMode==='same'?"Itarilish":"Tortilish", w/2, 30);
+  cctx.textAlign='left';
+  requestAnimationFrame(drawCharge);
+}
+drawCharge();
+
+// 3. Coulomb calc
+const qSlider=document.getElementById('qSlider'), rSlider=document.getElementById('rSlider'), qVal=document.getElementById('qVal'), rVal=document.getElementById('rVal'), fResult=document.getElementById('fResult');
+function updateCoulomb(){ const q=parseInt(qSlider.value,10), r=parseInt(rSlider.value,10); qVal.textContent=q; rVal.textContent=r; fResult.textContent=(q*q/(r*r)).toFixed(2); }
+qSlider.oninput=updateCoulomb; rSlider.oninput=updateCoulomb; updateCoulomb();
+
+// 4. Field lines
+const fieldCanvas=document.getElementById('fieldCanvas'), fctx=fieldCanvas.getContext('2d');
+let fieldType='pos';
+document.querySelectorAll('[data-fc]').forEach(b=>b.onclick=()=>{ document.querySelectorAll('[data-fc]').forEach(x=>x.classList.remove('active')); b.classList.add('active'); fieldType=b.dataset.fc; drawField(); });
+function drawField(){
+  const w=640,h=220; fctx.clearRect(0,0,w,h);
+  const cx=w/2, cy=h/2, n=12;
+  for(let i=0;i<n;i++){
+    const ang = (i/n)*Math.PI*2;
+    fctx.strokeStyle='rgba(185,182,200,0.5)'; fctx.lineWidth=1.5;
+    fctx.beginPath();
+    const x1=cx+Math.cos(ang)*18, y1=cy+Math.sin(ang)*18;
+    const x2=cx+Math.cos(ang)*95, y2=cy+Math.sin(ang)*95;
+    fctx.moveTo(x1,y1); fctx.lineTo(x2,y2); fctx.stroke();
+    const ahx = fieldType==='pos'? x2 : x1+ (x2-x1)*0.35;
+    const ahy = fieldType==='pos'? y2 : y1+ (y2-y1)*0.35;
+    fctx.save(); fctx.translate(ahx,ahy); fctx.rotate(ang + (fieldType==='pos'?0:Math.PI));
+    fctx.beginPath(); fctx.moveTo(0,0); fctx.lineTo(-8,-4); fctx.lineTo(-8,4); fctx.closePath();
+    fctx.fillStyle='rgba(185,182,200,0.6)'; fctx.fill(); fctx.restore();
+  }
+  fctx.fillStyle = fieldType==='pos' ? '#F2A93B' : '#59D6C4';
+  fctx.beginPath(); fctx.arc(cx,cy,18,0,Math.PI*2); fctx.fill();
+  fctx.fillStyle='#0c0c12'; fctx.font='bold 16px Manrope'; fctx.textAlign='center'; fctx.fillText(fieldType==='pos'?'+':'−', cx, cy+5);
+  fctx.textAlign='left';
+}
+drawField();
+
+// 5. Charge distribution on conductor
+const distCanvas=document.getElementById('distCanvas'), dctx=distCanvas.getContext('2d');
+function drawDist(){
+  const w=640,h=200; dctx.clearRect(0,0,w,h);
+  const cx=w/2, cy=h/2, r=70;
+  dctx.strokeStyle='#363c5c'; dctx.lineWidth=2; dctx.beginPath(); dctx.arc(cx,cy,r,0,Math.PI*2); dctx.stroke();
+  const n=16;
+  for(let i=0;i<n;i++){
+    const ang=(i/n)*Math.PI*2;
+    const x=cx+Math.cos(ang)*r, y=cy+Math.sin(ang)*r;
+    dctx.fillStyle='#F2A93B'; dctx.beginPath(); dctx.arc(x,y,6,0,Math.PI*2); dctx.fill();
+  }
+  dctx.fillStyle='#B9B6C8'; dctx.font='12px Manrope'; dctx.fillText('Zaryadlar faqat sirtda', cx-62, cy+r+24);
+}
+drawDist();
+
+// 6. Scenario quiz
+const scenarios = [
+  {p:"Momaqaldiroq paytida baland daraxt tagida turish xavfsizmi?", correct:false},
+  {p:"Momaqaldiroq paytida uyga kirib, elektr asboblarini o'chirish kerakmi?", correct:true},
+  {p:"Yomg'irda ochiq dalada metall buyum (masalan, soyabon) ko'tarib yurish xavfsizmi?", correct:false},
+];
+const scnWrap = document.getElementById('scnWrap');
+scenarios.forEach((s,i)=>{
+  const div = document.createElement('div'); div.className='scn';
+  div.innerHTML = `<p>${i+1}. ${s.p}</p><div class="btns"><button class="yes">Ha</button><button class="no">Yo'q</button></div><div class="fb"></div>`;
+  const [yesBtn, noBtn] = div.querySelectorAll('button');
+  const fb = div.querySelector('.fb');
+  const answer = (picked)=>{
+    yesBtn.disabled = noBtn.disabled = true;
+    const isRight = picked === s.correct;
+    fb.className = 'fb ' + (isRight ? 'ok' : 'bad');
+    fb.textContent = isRight ? "To'g'ri javob!" : "Noto'g'ri — xavfsizlik qoidalarini yana eslang.";
+  };
+  yesBtn.onclick=()=>answer(true); noBtn.onclick=()=>answer(false);
+  scnWrap.appendChild(div);
+});
+
+// 7. Current flow
+const currentCanvas=document.getElementById('currentCanvas'), curctx=currentCanvas.getContext('2d'); let curT=0;
+function drawCurrent(){
+  const w=640,h=120; curctx.clearRect(0,0,w,h);
+  curctx.strokeStyle='#B9B6C8'; curctx.lineWidth=4; curctx.beginPath(); curctx.moveTo(30,h/2); curctx.lineTo(w-30,h/2); curctx.stroke();
+  curT+=0.015;
+  for(let i=0;i<8;i++){
+    const x = 30 + ((curT+i/8)%1)*(w-60);
+    curctx.fillStyle='#59D6C4'; curctx.beginPath(); curctx.arc(x,h/2,6,0,Math.PI*2); curctx.fill();
+    curctx.fillStyle='#0c0c12'; curctx.font='bold 9px Manrope'; curctx.textAlign='center'; curctx.fillText('−',x,h/2+3);
+  }
+  curctx.textAlign='left'; curctx.fillStyle='#B9B6C8'; curctx.font='12px Manrope'; curctx.fillText('Elektronlar harakati (tok yo\'nalishiga teskari)', 30, 24);
+  requestAnimationFrame(drawCurrent);
+}
+drawCurrent();
+
+// 9. Voltmeter gauge
+const voltCanvas=document.getElementById('voltCanvas'), vctx2=voltCanvas.getContext('2d'); const voltSlider=document.getElementById('voltSlider');
+function drawGauge(canvas,ctx,val,max,label,color){
+  const w=canvas.width,h=canvas.height; ctx.clearRect(0,0,w,h);
+  const cx=w/2, cy=h-30, r=90;
+  ctx.strokeStyle='#363c5c'; ctx.lineWidth=10; ctx.beginPath(); ctx.arc(cx,cy,r,Math.PI,0); ctx.stroke();
+  const frac = val/max;
+  ctx.strokeStyle=color; ctx.beginPath(); ctx.arc(cx,cy,r,Math.PI,Math.PI+Math.PI*frac); ctx.stroke();
+  const ang = Math.PI + Math.PI*frac;
+  const nx = cx+Math.cos(ang)*r*0.8, ny=cy+Math.sin(ang)*r*0.8;
+  ctx.strokeStyle='#EDE8DC'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(nx,ny); ctx.stroke();
+  ctx.fillStyle='#EDE8DC'; ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=color; ctx.font='bold 22px Fraunces, serif'; ctx.textAlign='center'; ctx.fillText(val+label, cx, cy-20);
+  ctx.textAlign='left';
+}
+voltSlider.addEventListener('input', ()=>drawGauge(voltCanvas,vctx2,parseInt(voltSlider.value,10),20,' V','#F2A93B'));
+drawGauge(voltCanvas,vctx2,parseInt(voltSlider.value,10),20,' V','#F2A93B');
+
+// 10. Ammeter gauge
+const ampCanvas=document.getElementById('ampCanvas'), actx2=ampCanvas.getContext('2d'); const ampSlider=document.getElementById('ampSlider');
+ampSlider.addEventListener('input', ()=>drawGauge(ampCanvas,actx2,parseFloat(ampSlider.value),10,' A','#59D6C4'));
+drawGauge(ampCanvas,actx2,parseFloat(ampSlider.value),10,' A','#59D6C4');
+
+// 11. Ohm calc
+const iSlider=document.getElementById('iSlider'), rSlider2=document.getElementById('rSlider2'), iVal=document.getElementById('iVal'), rVal2=document.getElementById('rVal2'), uResult=document.getElementById('uResult');
+function updateOhm(){ const I=parseInt(iSlider.value,10), R=parseInt(rSlider2.value,10); iVal.textContent=I; rVal2.textContent=R; uResult.textContent=I*R; }
+iSlider.oninput=updateOhm; rSlider2.oninput=updateOhm; updateOhm();
+
+// 12. Resistance calc
+const lSlider=document.getElementById('lSlider'), sSlider2=document.getElementById('sSlider2'), lVal=document.getElementById('lVal'), sVal2=document.getElementById('sVal2'), rResult2=document.getElementById('rResult2');
+function updateRes(){ const L=parseInt(lSlider.value,10), S=parseInt(sSlider2.value,10); lVal.textContent=L; sVal2.textContent=S; rResult2.textContent=(L/S).toFixed(1); }
+lSlider.oninput=updateRes; sSlider2.oninput=updateRes; updateRes();
+
+// 13. Rheostat bulb
+const rheoCanvas=document.getElementById('rheoCanvas'), rctx=rheoCanvas.getContext('2d'); const rheoSlider=document.getElementById('rheoSlider');
+function drawRheo(){
+  const w=640,h=160; rctx.clearRect(0,0,w,h);
+  const r = parseInt(rheoSlider.value,10);
+  const brightness = 1 - (r/100);
+  const bulbX=500, bulbY=80;
+  rctx.strokeStyle='#B9B6C8'; rctx.lineWidth=3;
+  rctx.beginPath(); rctx.moveTo(40,bulbY); rctx.lineTo(140,bulbY); rctx.stroke();
+  rctx.strokeRect(140,bulbY-20,120,40);
+  rctx.fillStyle='#B9B6C8'; rctx.font='11px Manrope'; rctx.fillText('Reostat',160,bulbY-28);
+  rctx.beginPath(); rctx.moveTo(260,bulbY); rctx.lineTo(bulbX-24,bulbY); rctx.stroke();
+  const glow = Math.max(0.15,brightness);
+  rctx.fillStyle = `rgba(242,169,59,${glow})`;
+  rctx.beginPath(); rctx.arc(bulbX,bulbY,24,0,Math.PI*2); rctx.fill();
+  if(glow>0.4){ rctx.strokeStyle=`rgba(242,169,59,${glow*0.5})`; for(let i=0;i<3;i++){ rctx.beginPath(); rctx.arc(bulbX,bulbY,28+i*7,0,Math.PI*2); rctx.stroke(); } }
+  rctx.fillStyle='#B9B6C8'; rctx.fillText('Chiroq', bulbX-18, bulbY+45);
+}
+rheoSlider.addEventListener('input', drawRheo); drawRheo();
+
+// Quizzes
+document.querySelectorAll('.quiz-card').forEach(card=>{
+  const opts = card.querySelectorAll('.opt');
+  opts.forEach(opt=>{ opt.addEventListener('click', ()=>{ if(card.dataset.a) return; card.dataset.a='1';
+    opts.forEach(o=>{ if(o.dataset.c==='true') o.classList.add('correct'); else if(o===opt) o.classList.add('wrong'); }); }); });
+});
+</script>
+</body>
+</html>
